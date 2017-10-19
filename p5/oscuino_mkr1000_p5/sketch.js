@@ -1,7 +1,7 @@
-var oscuino_IP='192.168.0.10'
+var oscuino_IP='10.130.22.52'
 var osc_IN_Port='10000'
 var osc_UOT_Port='12000'
-var bridge_IP='127.0.0.1'
+var bridge_IP='0.0.0.0'
 var bridge_Port='8081'
 
 var oscuino;
@@ -14,21 +14,16 @@ function setup() {
 
 	setInterval(function(){
 		blink=toggle(blink)
-		console.log(blink);
-
 	},1000);
 }
 
 function draw() {
 		background(255,255,255);
-		if(blink==1){
-			fill(255,0,0);
-			oscuino.write(6,255);
-		}else{
-			fill(0,255,0);
-			oscuino.write(6,0);
-		}
-		rect(oscuino.read(0),oscuino.read(1),oscuino.read(2),oscuino.read(3))
+		var lightSensorValue=oscuino.read(0);
+
+		fill(lightSensorValue);
+		rect(100,100,100,100);
+		oscuino.write(6,lightSensorValue)
 }
 
 function toggle(val){

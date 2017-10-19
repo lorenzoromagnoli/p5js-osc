@@ -3,6 +3,7 @@
 // Yotam Mann and Adrian Freed
 #include <SPI.h>
 #include <WiFi101.h>
+#include <WiFi101OTA.h>
 #include <WiFiUdp.h>
 #include <OSCMessage.h>
 #include <OSCBundle.h>
@@ -48,6 +49,8 @@ void setup() {
 
 //reads and routes the incoming messages
 void loop() {
+  WiFiOTA.poll();
+
   OSCMessage msg;
   int size = Udp.parsePacket();
 
