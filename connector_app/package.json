@@ -1,0 +1,73 @@
+{
+    "name": "the-connector",
+    "productName": "the-connector",
+    "version": "1.0.0",
+    "description": "run a webserver and route osc messages",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "eslint src --color"
+    },
+    "keywords": [],
+    "author": "Lorenzo",
+    "license": "MIT",
+    "config": {
+        "forge": {
+            "make_targets": {
+                "win32": [
+                    "squirrel"
+                ],
+                "darwin": [
+                    "zip",
+										"dmg"
+                ],
+                "linux": [
+                    "deb",
+                    "rpm"
+                ]
+            },
+            "electronPackagerConfig": {
+                "packageManager": "npm"
+            },
+            "electronWinstallerConfig": {
+                "name": "my_new_app"
+            },
+            "electronInstallerDebian": {},
+            "electronInstallerRedhat": {},
+            "github_repository": {
+                "owner": "lorenzoromagnoli",
+                "name": "p5js-osc"
+            },
+            "windowsStoreConfig": {
+                "packageName": "",
+                "name": "mynewapp"
+            }
+        }
+    },
+    "dependencies": {
+        "electron-compile": "^6.4.2",
+        "electron-squirrel-startup": "^1.0.0",
+        "express": "^4.16.2",
+        "http": "0.0.0",
+        "ip": "^1.1.5",
+        "node-osc": "^2.0.0",
+        "os-homedir": "^1.0.2",
+        "serve-index": "^1.9.1",
+        "socket.io": "1.4.5"
+    },
+    "devDependencies": {
+        "babel-plugin-transform-async-to-generator": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "electron-forge": "^4.1.2",
+        "electron-prebuilt-compile": "1.7.9",
+        "eslint": "^3.19.0",
+        "eslint-config-airbnb": "^15.1.0",
+        "eslint-plugin-import": "^2.7.0",
+        "eslint-plugin-jsx-a11y": "^5.1.1",
+        "eslint-plugin-react": "^7.4.0"
+    }
+}

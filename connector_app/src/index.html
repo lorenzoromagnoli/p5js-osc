@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>THE CONNECTOR</title>
+		<script src='./public/main.js'></script>
+		<link rel="stylesheet" type="text/css" href="./public/style.css">
+  </head>
+
+  <body>
+		<h1>The connector</h1>
+
+
+		<div id="disconnected" >
+			<input type="text"></input>
+			<input type="button" onclick="connect()" value="connect"/>
+		</div>
+
+		<div id="connected" class="hidden">
+			<div class="info">
+				<span class="title">Server is running at:</span>
+				<span class="field">localhost:8081</span>
+			</div>
+			<div class="info">
+				<span class="title">Your IP address is:</span>
+				<span class="field" id="IP"></span>
+			</div>
+			<div class="info">
+				<span class="title">Bridge is running on port:</span>
+				<span class="field" id="PORT"></span>
+			</div>
+			<div class="info">
+				<span class="title">Your sketchbook folder should be here:</span>
+				<span class="field" id="PATH"></span>
+			</div>
+		</div>
+  </body>
+</html>
