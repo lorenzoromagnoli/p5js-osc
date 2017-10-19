@@ -22,7 +22,7 @@
                 ],
                 "darwin": [
                     "zip",
-										"dmg"
+                    "dmg"
                 ],
                 "linux": [
                     "deb",
@@ -53,6 +53,7 @@
         "express": "^4.16.2",
         "http": "0.0.0",
         "ip": "^1.1.5",
+        "mdns": "^2.3.3",
         "node-osc": "^2.0.0",
         "os-homedir": "^1.0.2",
         "serve-index": "^1.9.1",

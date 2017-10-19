@@ -11,6 +11,7 @@ var serveIndex = require('serve-index')
 const {ipcMain} = require('electron')
 var ip = require('ip');
 const {shell} = require('electron')
+var mdns = require('mdns');
 
 
 var webserver = express();
@@ -26,6 +27,10 @@ var bridge_Port = 8081;
 var webserverFolder = osHomedir() + "/connector"
 console.log(webserverFolder);
 
+
+let content;
+
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
 	app.quit();
@@ -38,15 +43,15 @@ let mainWindow;
 const createWindow = () => {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
-		width: 300,
-		height: 300,
+		width: 500,
+		height: 500,
 	});
 
 	// and load the index.html of the app.
 	mainWindow.loadURL(`file://${__dirname}/index.html`);
 
 	// Open the DevTools.
-	//mainWindow.webContents.openDevTools();
+	mainWindow.webContents.openDevTools();
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', () => {
@@ -55,6 +60,9 @@ const createWindow = () => {
 		// when you should delete the corresponding element.
 		mainWindow = null;
 	});
+
+	content = mainWindow.webContents
+	console.log(content)
 };
 
 
@@ -147,35 +155,26 @@ const connect = function(callback) {
 			}
 		});
 	});
-
+	runMDNS();
 	callback();
 }
 
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+function runMDNS(){
+	// watch all http servers
+	var browser = mdns.createBrowser(mdns.tcp('ino'));
 
-// io.sockets.on('connection', function (socket) {
-// 	console.log('connection');
-// 	socket.on("config", function (obj) {
-// 		isConnected = true;
-//     	oscServer = new osc.Server(obj.server.port, obj.server.host);
-// 	    oscClient = new osc.Client(obj.client.host, obj.client.port);
-// 	    oscClient.send('/status', socket.sessionId + ' connected');
-// 		oscServer.on('message', function(msg, rinfo) {
-// 			//console.log("arduino->",msg);
-// 			socket.emit("message", msg);
-// 		});
-// 		socket.emit("connected", 1);
-// 	});
-//  	socket.on("message", function (obj) {
-// 		//console.log("p5->",obj);
-// 		oscClient.send.apply(oscClient, obj);
-//   	});
-// 	socket.on('disconnect', function(){
-// 		if (isConnected) {
-// 			oscServer.kill();
-// 			oscClient.kill();
-// 		}
-//   	});
-// });
+	browser.on('serviceUp', function(service) {
+	  console.log("service up: ", service);
+		content.send("discovery_up", service);
+	});
+	browser.on('serviceDown', function(service) {
+	  console.log("service down: ", service);
+		content.send("discovery_down", service);
+	});
+	browser.start();
+
+	// discover all available service types
+	var all_the_types = mdns.browseThemAll(); // all_the_types is just another browser...
+
+}

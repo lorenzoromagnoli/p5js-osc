@@ -3,21 +3,23 @@
 // Yotam Mann and Adrian Freed
 #include <SPI.h>
 #include <WiFi101.h>
-#include <WiFi101OTA.h>
 #include <WiFiUdp.h>
 #include <OSCMessage.h>
 #include <OSCBundle.h>
 #include <OSCBoards.h>
+#include <ArduinoMDNS.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "BCMIlabs-2g";
+char pass[] = "SpaccaBCMISpacca";
 int locPort = 12000;
 int outPort = 10000;
+String boardname="MKRLORENZO2";
 
 WiFiUDP Udp;
 OSCBundle bundleOUT;
 OSCErrorCode error;
+MDNS mdns(Udp);
 
 /**
    MAIN METHODS
@@ -42,14 +44,17 @@ void setup() {
 
   Udp.begin(locPort);
 
-  for (int i=0;i<7;i++){
-    pinMode(i,OUTPUT);
+  for (int i = 0; i < 7; i++) {
+    pinMode(i, OUTPUT);
   }
+  mdns.begin(WiFi.localIP(), boardname.c_str());
+  String addr=String(boardname+"._ino");
+  mdns.addServiceRecord(addr.c_str(),80,MDNSServiceTCP);
 }
 
 //reads and routes the incoming messages
 void loop() {
-  WiFiOTA.poll();
+  mdns.run();
 
   OSCMessage msg;
   int size = Udp.parsePacket();
@@ -75,3 +80,6 @@ void loop() {
     bundleOUT.empty(); // empty the bundle ready to use for new messages
   }
 }
+
+
+
