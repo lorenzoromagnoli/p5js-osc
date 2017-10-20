@@ -10,11 +10,11 @@
 #include <ArduinoMDNS.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "BCMIlabs-2g";
-char pass[] = "SpaccaBCMISpacca";
+char ssid[] = "";
+char pass[] = "";
 int locPort = 12000;
 int outPort = 10000;
-String boardname="MKRLORENZO2";
+String boardname="MKRLORENZO1";
 
 WiFiUDP Udp;
 OSCBundle bundleOUT;
@@ -80,6 +80,3 @@ void loop() {
     bundleOUT.empty(); // empty the bundle ready to use for new messages
   }
 }
-
-
-
