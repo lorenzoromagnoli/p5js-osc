@@ -138,22 +138,29 @@ const connect = function(callback) {
 			oscServer = new osc.Server(obj.server.port, obj.server.host);
 			oscClient = new osc.Client(obj.client.host, obj.client.port);
 			oscClient.send('/status', socket.sessionId + ' connected');
+
 			oscServer.on('message', function(msg, rinfo) {
-				//console.log("arduino->",msg);
-				socket.emit("message", msg);
+				console.log("arduino->",msg);
+				if (isConnected) {
+					socket.emit("message", msg);
+				}
 			});
 			socket.emit("connected", 1);
 		});
+
 		socket.on("message", function(obj) {
-			//console.log("p5->",obj);
+			console.log("p5->",obj);
 			oscClient.send.apply(oscClient, obj);
 		});
+
 		socket.on('disconnect', function() {
 			if (isConnected) {
 				oscServer.kill();
 				oscClient.kill();
 			}
+			isConnected=false;
 		});
+
 	});
 	runMDNS();
 	callback();
