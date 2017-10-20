@@ -26,50 +26,42 @@ Start node.
 
 #### Usage
 
-- Upload the Arduino sketch in the /sketch folder to your MKR1000.
-- Run a local server and open the p5.js example
+- Upload the Arduino sketch in the /arduino folder to your MKR1000.
+- Run the connector
+- create a Folder called connector in your home directory (the connector should tell you where)
+- copy the examples inside the /p5 folder to your connector folder.
+- go to http://localhost:8081 and select which sketch you want to run.
 
 #### Example p5.js sketch
 
 ```javascript
-var oscuino_IP='192.168.0.10'
-var osc_IN_Port='10000'
-var osc_UOT_Port='12000'
-var bridge_IP='127.0.0.1'
-var bridge_Port='8081'
+// those port are fixed if you are using the connector and the provided Arduino sketch
+osc_IN_Port='10000';
+osc_OUT_Port='12000';
 
+//your Arduino IP address
+var oscuino_IP = '192.168.0.12';
 var oscuino;
 
-var blink=0;
+var lightSensorValue=0;
 
 function setup() {
 	createCanvas(500, 500);
-	oscuino= new Oscuino(osc_IN_Port, osc_UOT_Port, oscuino_IP, bridge_IP, bridge_Port, 100);
 
-	setInterval(function(){
-		blink=toggle(blink)
-		console.log(blink);
-
-	},1000);
+	//this creates a websocket
+	setupOsc(osc_IN_Port, osc_OUT_Port, function(socket) {
+		console.log(socket);
+		//once created pass the socket to the oscuino constructor
+		oscuino = new Oscuino(oscuino_IP, 50, socket);
+	});
 }
 
 function draw() {
-		background(255,255,255);
-		if(blink==1){
-			fill(255,0,0);
-			oscuino.write(6,255);
-		}else{
-			fill(0,255,0);
-			oscuino.write(6,0);
-		}
-		rect(oscuino.read(0),oscuino.read(1),oscuino.read(2),oscuino.read(3))
-}
 
-function toggle(val){
-	if (val==0){
-		return(1)
-	}else{
-		return(0);
+	if (oscuino){ //wait for the object to exist
+		lightSensorValue=oscuino.read(0);
+		background(lightSensorValue/4);
+		oscuino.write(0,lightSensorValue);
 	}
 }
 ```
@@ -77,16 +69,22 @@ function toggle(val){
 
 #### API
 ```javascript
-Oscuino(osc_IN_Port, osc_UOT_Port, oscuino_IP, bridge_IP, bridge_Port, update_frequency);
+setupOsc(osc_IN_Port, osc_OUT_Port, function(socket){}
+```
+
+Setup the osc socket;
+the callback function fired after the websocket connection is successfull opened
+
+```javascript
+Oscuino(oscuino_IP, update_frequency, socket);
 ```
 Constructor function, the following parameters must be specified:
 
-- **osc_IN_Port:** must be the same as the one specified in the Arduino Sketch ()
-- **osc_OUT_Port:** must be the same as the one specified in the Arduino Sketch ()
-- **oscuino_IP_Port:** the Ip address of your arduino boad running the sketch
-- **bridge IP:** where is the bridge running?
-- **bridge port:** where is the bridge running?
+
+- **oscuino_IP:** the Ip address of your arduino boad running the sketch
 - **update_frequency:** how often the value should be sent to the board.
+- **websocket**: awebsocket connection;
+
 
 ```javascript
 read(pin);

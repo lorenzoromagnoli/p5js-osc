@@ -54,7 +54,7 @@
         "http": "0.0.0",
         "ip": "^1.1.5",
         "mdns": "^2.3.3",
-        "node-osc": "^2.0.0",
+        "node-osc": "^2.1.0",
         "os-homedir": "^1.0.2",
         "serve-index": "^1.9.1",
         "socket.io": "1.4.5"
